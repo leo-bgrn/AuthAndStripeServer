@@ -10,7 +10,7 @@ const getHashedPassword = (password) => {
 };
 
 /* GET users listing. */
-router.get("/", function (req, res, next) {
+router.get("/validate", function (req, res, next) {
   if (req.user) {
     res.sendStatus(200);
   } else {
