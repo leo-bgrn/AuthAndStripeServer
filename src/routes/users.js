@@ -18,7 +18,19 @@ router.get("/validate", function (req, res, next) {
   }
 });
 
-users = [];
+router.get("/me", async function (req, res, next) {
+  if (req.user) {
+    const users = await userController.getUsers();
+    const fullUser = users.find((user) => user.email === req.user.email);
+    res.send({
+      email: fullUser.email,
+      firstName: fullUser.firstName,
+      lastName: fullUser.lastName,
+    });
+  } else {
+    res.sendStatus(403);
+  }
+});
 
 router.post("/register", async function (req, res, next) {
   const { email, firstName, lastName, password, confirmPassword } = req.body;
