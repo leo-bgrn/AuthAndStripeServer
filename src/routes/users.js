@@ -83,4 +83,17 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/google", async (req, res) => {
+  const { accessToken } = req.body;
+
+  if (accessToken) {
+    const authToken = await userController.loginUserWithGoogle(accessToken);
+    res.status(200).send({
+      token: authToken,
+    });
+  } else {
+    res.status(400).send("You need to provide an accessToken");
+  }
+});
+
 module.exports = router;
