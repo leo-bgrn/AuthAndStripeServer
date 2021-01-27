@@ -96,4 +96,16 @@ router.post("/google", async (req, res) => {
   }
 });
 
+router.post("/facebook", async (req, res) => {
+  const { accessToken } = req.body;
+
+  if (accessToken) {
+    const authToken = await userController.loginUserWithFacebook(accessToken);
+    res.status(200).send({
+      token: authToken,
+    });
+  } else {
+    res.status(400).send("You need to provide an accessToken");
+  }
+});
 module.exports = router;

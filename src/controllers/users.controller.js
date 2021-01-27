@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const googleApi = require("../services/googleApi");
+const facebookApi = require("../services/facebookApi");
 
 let users = [];
 
@@ -54,10 +55,30 @@ async function loginUserWithGoogle(googleAccessToken) {
   }
 }
 
+async function loginUserWithFacebook(facebookAccessToken) {
+  const userInfo = await facebookApi.getUserInfo(facebookAccessToken);
+  const userAlreadySignedUp = users.find(
+    (user) => user.email === userInfo.email
+  );
+  if (userAlreadySignedUp) {
+    return await loginUser(userAlreadySignedUp);
+  } else {
+    const userToAdd = {
+      type: "FACEBOOK",
+      firstName: userInfo.first_name,
+      lastName: userInfo.last_name,
+      email: userInfo.email,
+    };
+    users.push(userToAdd);
+    return await loginUser(userToAdd);
+  }
+}
+
 module.exports = {
   getUsers,
   registerUser,
   loginUser,
   getAuthTokens,
   loginUserWithGoogle,
+  loginUserWithFacebook,
 };
