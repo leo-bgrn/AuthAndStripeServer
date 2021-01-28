@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const crypto = require("crypto");
 const userController = require("../controllers/users.controller");
+const { SSL_OP_NETSCAPE_CA_DN_BUG } = require("constants");
 
 const getHashedPassword = (password) => {
   const sha256 = crypto.createHash("sha256");
@@ -84,28 +85,37 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/google", async (req, res) => {
-  const { accessToken } = req.body;
+  try {
+    const { accessToken } = req.body;
 
-  if (accessToken) {
-    const authToken = await userController.loginUserWithGoogle(accessToken);
-    res.status(200).send({
-      token: authToken,
-    });
-  } else {
-    res.status(400).send("You need to provide an accessToken");
+    if (accessToken) {
+      const authToken = await userController.loginUserWithGoogle(accessToken);
+      res.status(200).send({
+        token: authToken,
+      });
+    } else {
+      res.status(400).send("You need to provide an accessToken");
+    }
+  } catch (error) {
+    next(error);
   }
 });
 
-router.post("/facebook", async (req, res) => {
-  const { accessToken } = req.body;
+router.post("/facebook", async (req, res, next) => {
+  try {
+    const { accessToken } = req.body;
 
-  if (accessToken) {
-    const authToken = await userController.loginUserWithFacebook(accessToken);
-    res.status(200).send({
-      token: authToken,
-    });
-  } else {
-    res.status(400).send("You need to provide an accessToken");
+    if (accessToken) {
+      const authToken = await userController.loginUserWithFacebook(accessToken);
+      res.status(200).send({
+        token: authToken,
+      });
+    } else {
+      res.status(400).send("You need to provide an accessToken");
+    }
+  } catch (error) {
+    next(error);
   }
 });
+
 module.exports = router;

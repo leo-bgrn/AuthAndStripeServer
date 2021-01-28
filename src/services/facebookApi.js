@@ -1,18 +1,16 @@
 const fetch = require("node-fetch");
 
 async function getUserInfo(accessToken) {
-  const URL = "https://graph.facebook.com/v9.0/me";
+  const URL =
+    "https://graph.facebook.com/me?fields=first_name,last_name,email&access_token=" +
+    accessToken;
   return fetch(URL, {
     method: "GET",
-    params: {
-      access_token: accessToken,
-      fields: "first_name,last_name,email",
-    },
   })
     .then((response) => response.json())
     .catch((error) => {
       console.warn(
-        "An error occurred while getting user info from Google API. Error: " +
+        "An error occurred while getting user info from Facebook API. Error: " +
           error
       );
       throw error;

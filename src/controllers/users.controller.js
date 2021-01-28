@@ -57,6 +57,15 @@ async function loginUserWithGoogle(googleAccessToken) {
 
 async function loginUserWithFacebook(facebookAccessToken) {
   const userInfo = await facebookApi.getUserInfo(facebookAccessToken);
+
+  if (userInfo.error) {
+    console.warn(
+      "An error occurred while getting user's information from Facebook. Error: " +
+        userInfo.error.message
+    );
+    throw new Error(userInfo.error);
+  }
+
   const userAlreadySignedUp = users.find(
     (user) => user.email === userInfo.email
   );
