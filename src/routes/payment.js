@@ -13,9 +13,6 @@ router.post("/pay", (req, res) => {
       currency: "eur",
       source: req.body.tokenId,
       description: "Test payment",
-      billing_details: {
-        email: req.user.email,
-      },
     })
     .then((result) => res.status(200).json(result));
 });
