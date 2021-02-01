@@ -8,6 +8,8 @@ const userController = require("./src/controllers/users.controller");
 
 var app = express();
 
+require("dotenv").config();
+
 app.use(async (req, res, next) => {
   // Get auth token from the cookies
   const bearerToken = req.headers["authorization"];
@@ -32,8 +34,10 @@ app.use(express.static(path.join(__dirname, "public")));
 
 var indexRouter = require("./src/routes/index");
 var usersRouter = require("./src/routes/users");
+var paymentRouter = require("./src/routes/payment");
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/payment", paymentRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
